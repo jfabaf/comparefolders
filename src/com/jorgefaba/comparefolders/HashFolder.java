@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 
@@ -72,7 +74,9 @@ public class HashFolder implements Serializable {
 	}
 	
 	public Collection<FileHash> getFiles() {
-		return hash.values();
+		ArrayList<FileHash> files = new ArrayList<FileHash>(hash.values()); 
+		Collections.sort(files);
+		return files;
 	}
 	
 	public boolean contains(FileHash fileHash) {

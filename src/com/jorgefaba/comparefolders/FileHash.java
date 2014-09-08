@@ -1,8 +1,9 @@
 package com.jorgefaba.comparefolders;
 
 import java.io.Serializable;
+import java.lang.Comparable;
 
-public class FileHash implements Serializable{
+public class FileHash implements Serializable, Comparable<FileHash>{
 	/**
 	 * 
 	 */
@@ -19,6 +20,10 @@ public class FileHash implements Serializable{
 	}
 	public String getPath() {
 		return path;
+	}
+	@Override
+	public int compareTo(FileHash fh) {
+		return this.getPath().compareTo(fh.getPath());
 	}
 	
 	
