@@ -18,9 +18,6 @@ public class Main {
 	/*TODO: 
 	 * Patrones de nombres de archivos
 	 * Rsultados ordenados alfabéticamente
-	 * parámetros con apache commons cli
-	 * grabar el hashtable en un fichero y elegir pasar un path o un fichero con el árbol hash
-	 * calcular el tamaño total al principio para ofrecer % de progreso
 	 */
 	public static final String NAME = "comparefolders";
 	private static final Options options = new Options();
