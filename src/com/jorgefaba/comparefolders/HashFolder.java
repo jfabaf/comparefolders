@@ -52,7 +52,7 @@ public class HashFolder implements Serializable {
 			hash.put(md5, new FileHash(file.getPath(),md5));
 			if (progress) {
 				sizeProcessed = sizeProcessed.add(FileUtils.sizeOfAsBigInteger(file));
-				percentajeDoneAux =  sizeProcessed.divide(sizeFolder).multiply(BigInteger.valueOf(100)).intValue();
+				percentajeDoneAux =  sizeProcessed.multiply(BigInteger.valueOf(100)).divide(sizeFolder).intValue();
 				if (percentajeDoneAux > percentajeDone) {
 					percentajeDone = percentajeDoneAux;
 					System.out.printf("%d%% done\n",percentajeDone);
