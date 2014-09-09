@@ -30,3 +30,18 @@ File '1/may/image3.jpg' not found in folder2
 ```
 
 And it says nothing about fffg.jpg and image2.jpg because these files are in folder 2 (same MD5)
+
+Usage
+-----
+
+```
+usage: comparefolders  [-f1 <folder1>] [-f2 <folder2>] [-hs1 <file>] [-hs2
+       <file>] [-ht1 <file>] [-ht2 <file>] [-sp]
+ -f1,--folder1 <folder1>        Path to folder 1
+ -f2,--folder2 <folder2>        Path to folder 2
+ -hs1,--hashtablesave1 <file>   save hashtable of folder1 to file
+ -hs2,--hashtablesave2 <file>   save hashtable of folder2 to file
+ -ht1,--hashtable1 <file>       Use hashtable1 file as a folder1
+ -ht2,--hashtable2 <file>       Use hashtable2 file as a folder2
+ -sp,--showprogress             Show percentaje of progress
+ ```
