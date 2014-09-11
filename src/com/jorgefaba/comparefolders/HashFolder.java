@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
@@ -27,6 +28,7 @@ public class HashFolder implements Serializable {
 	BigInteger 		sizeFolder;
 	BigInteger		sizeProcessed = BigInteger.ZERO;
 	int				percentajeDone = 0;
+	long			init = 0;
 
 	public HashFolder(String folderstr) throws Exception {
 		this(folderstr,false);
@@ -41,6 +43,7 @@ public class HashFolder implements Serializable {
 		if (progress) {
 			System.out.printf("Processing folder '%s':\n",folder.getAbsolutePath());
 			sizeFolder = FileUtils.sizeOfDirectoryAsBigInteger(folder);
+			init = System.currentTimeMillis();
 		}
 		generateHash(folder);
 		
@@ -63,21 +66,28 @@ public class HashFolder implements Serializable {
 			
 	}
 	
+	private String generateET(long milis, BigInteger size) {
+		long estimatedTime = sizeFolder.multiply(BigInteger.valueOf(milis)).divide(size).longValue() - (System.currentTimeMillis() - init);
+		return String.format("%02d:%02d:%02d ET", 
+			    TimeUnit.MILLISECONDS.toHours(estimatedTime),
+			    TimeUnit.MILLISECONDS.toMinutes(estimatedTime) - 
+			    TimeUnit.MINUTES.toMinutes(TimeUnit.MILLISECONDS.toHours(estimatedTime)),
+			    TimeUnit.MILLISECONDS.toSeconds(estimatedTime) - 
+			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(estimatedTime)));
+		
+	}
+	
 	private void generateHash(File file) throws IOException {
-		int				percentajeDoneAux;
+		//int				percentajeDoneAux;
 		if (file.isFile()) {
 			String md5 = getMD5(file);
 			hash.put(md5, new FileHash(file.getPath(),md5));
 			if (progress) {
 				sizeProcessed = sizeProcessed.add(FileUtils.sizeOfAsBigInteger(file));
-				percentajeDoneAux =  sizeProcessed.multiply(BigInteger.valueOf(100)).divide(sizeFolder).intValue();
-				if (percentajeDoneAux > percentajeDone) {
-					percentajeDone = percentajeDoneAux;
-					System.out.printf("[%s] %d%% done%s",generateBar(percentajeDone), percentajeDone,percentajeDone >= 100 ? "\n" : "\r");
-					if (percentajeDone >= 100)
-						progress = false;
-				}
-				
+				percentajeDone =  sizeProcessed.multiply(BigInteger.valueOf(100)).divide(sizeFolder).intValue();
+				System.out.printf("[%s] %d%% done (%s)%s",generateBar(percentajeDone), percentajeDone,generateET(System.currentTimeMillis() - init,sizeProcessed),percentajeDone >= 100 ? "\n" : "\r");
+				if (percentajeDone >= 100)
+					progress = false;
 			}
 		} else if (!processedPaths.contains(file.getCanonicalPath())){
 			processedPaths.add(file.getCanonicalPath());
