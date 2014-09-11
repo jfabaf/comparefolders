@@ -45,6 +45,18 @@ public class HashFolder implements Serializable {
 		
 	}
 	
+	private String generateBar(int percentage) {
+		String bar = "";
+		for (int i = 1 ; i <= 10 ; i++) {
+			if (i <= percentage/10)
+				bar = bar+"#";
+			else
+				bar = bar + " ";
+		}
+		return bar;
+			
+	}
+	
 	private void generateHash(File file) throws IOException {
 		int				percentajeDoneAux;
 		if (file.isFile()) {
@@ -55,7 +67,9 @@ public class HashFolder implements Serializable {
 				percentajeDoneAux =  sizeProcessed.multiply(BigInteger.valueOf(100)).divide(sizeFolder).intValue();
 				if (percentajeDoneAux > percentajeDone) {
 					percentajeDone = percentajeDoneAux;
-					System.out.printf("%d%% done\n",percentajeDone);
+					System.out.printf("[%s] %d%% done%s",generateBar(percentajeDone), percentajeDone,percentajeDone >= 100 ? "\n" : "\r");
+					if (percentajeDone >= 100)
+						progress = false;
 				}
 				
 			}
