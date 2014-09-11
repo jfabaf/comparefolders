@@ -1,5 +1,6 @@
 package com.jorgefaba.comparefolders;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class HashFolder implements Serializable {
 	boolean			progress;
 	BigInteger 		sizeFolder;
 	BigInteger		sizeProcessed = BigInteger.ZERO;
-	int				percentajeDone;
+	int				percentajeDone = 0;
 
 	public HashFolder(String folderstr) throws Exception {
 		this(folderstr,false);
@@ -43,6 +44,11 @@ public class HashFolder implements Serializable {
 		}
 		generateHash(folder);
 		
+	}
+	
+	private void close(Closeable c) throws IOException {
+	     if (c == null) return; 
+	     c.close();
 	}
 	
 	private String generateBar(int percentage) {
@@ -83,8 +89,16 @@ public class HashFolder implements Serializable {
 	}
 	
 	private String getMD5(File file) throws IOException {
-		FileInputStream fis = new FileInputStream(file);
-		return org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+		FileInputStream fis = null;
+		String md5 = null;
+		try {
+			fis = new FileInputStream(file);
+			md5 =  org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+		}
+		finally {
+			close(fis);
+		}
+		return md5;
 	}
 	
 	public Collection<FileHash> getFiles() {
