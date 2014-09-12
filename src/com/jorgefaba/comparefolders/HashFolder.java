@@ -68,13 +68,11 @@ public class HashFolder implements Serializable {
 	
 	private String generateET(long milis, BigInteger size) {
 		long estimatedTime = sizeFolder.multiply(BigInteger.valueOf(milis)).divide(size).longValue() - (System.currentTimeMillis() - init);
-		return String.format("%02d:%02d:%02d ET", 
-			    TimeUnit.MILLISECONDS.toHours(estimatedTime),
-			    TimeUnit.MILLISECONDS.toMinutes(estimatedTime) - 
-			    TimeUnit.MINUTES.toMinutes(TimeUnit.MILLISECONDS.toHours(estimatedTime)),
-			    TimeUnit.MILLISECONDS.toSeconds(estimatedTime) - 
-			    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(estimatedTime)));
-		
+		long hours, minutes, seconds;
+		hours = TimeUnit.MILLISECONDS.toHours(estimatedTime);
+		minutes = TimeUnit.MILLISECONDS.toMinutes(estimatedTime) -TimeUnit.HOURS.toMinutes(hours);
+		seconds = TimeUnit.MILLISECONDS.toSeconds(estimatedTime) - TimeUnit.MINUTES.toSeconds(minutes) - TimeUnit.HOURS.toSeconds(hours);
+		return String.format("%02d:%02d:%02d ET",hours,minutes,seconds);
 	}
 	
 	private void generateHash(File file) throws IOException {
