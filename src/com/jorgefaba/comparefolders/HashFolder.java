@@ -22,6 +22,7 @@ public class HashFolder implements Serializable {
 	 */
 	private static final long serialVersionUID = -4098355192873388828L;
 	Hashtable<String,FileHash>	hash = new Hashtable<String,FileHash>();
+	Hashtable<String,FileHash>  hashByPath = new Hashtable<String,FileHash>();
 	HashSet<String> processedPaths = new HashSet<String>();
 	File			folder;
 	boolean			progress;
@@ -31,10 +32,14 @@ public class HashFolder implements Serializable {
 	long			init = 0;
 
 	public HashFolder(String folderstr) throws Exception {
-		this(folderstr,false);
+		this(folderstr,null,false);
 	}
 	
-	public HashFolder(String folderstr, boolean progress) throws Exception {
+	public HashFolder(String folderstr,HashFolder hf) throws Exception {
+		this(folderstr,hf,false);
+	}
+	
+	public HashFolder(String folderstr, HashFolder hf, boolean progress) throws Exception {
 		super();
 		folder = new File(folderstr);
 		if (!folder.isDirectory())
@@ -45,7 +50,7 @@ public class HashFolder implements Serializable {
 			sizeFolder = FileUtils.sizeOfDirectoryAsBigInteger(folder);
 			init = System.currentTimeMillis();
 		}
-		generateHash(folder);
+		generateHash(folder, hf);
 		
 	}
 	
@@ -75,11 +80,23 @@ public class HashFolder implements Serializable {
 		return String.format("%02d:%02d:%02d ET",hours,minutes,seconds);
 	}
 	
-	private void generateHash(File file) throws IOException {
+	private void generateHash(File file, HashFolder hf) throws IOException {
 		//int				percentajeDoneAux;
 		if (file.isFile()) {
-			String md5 = getMD5(file);
+			
+			String md5 = null;
+			if (hf != null)
+				md5 = hf.getMd5FromHash(file);
+			if (md5 == null)
+			{	
+				md5 = getMD5(file);
+			} else {
+				if (progress) {
+					System.out.printf("Skipping file found in hastable: '%s':\n",file.getCanonicalPath());
+				}
+			}
 			hash.put(md5, new FileHash(file.getPath(),md5));
+			hashByPath.put(file.getCanonicalPath(), new FileHash(file.getCanonicalPath(),md5));
 			if (progress) {
 				sizeProcessed = sizeProcessed.add(FileUtils.sizeOfAsBigInteger(file));
 				percentajeDone =  sizeProcessed.multiply(BigInteger.valueOf(100)).divide(sizeFolder).intValue();
@@ -91,7 +108,7 @@ public class HashFolder implements Serializable {
 			processedPaths.add(file.getCanonicalPath());
 			File files[] = file.listFiles();
 			for(File fileIt: files ) {
-				generateHash(fileIt);
+				generateHash(fileIt, hf);
 		}
 		}
 	}
@@ -126,6 +143,14 @@ public class HashFolder implements Serializable {
 	
 	public String getFolderPath() {
 		return folder.getAbsolutePath();
+	}
+	
+	public String getMd5FromHash(File file) throws IOException {
+		FileHash fh = hashByPath.get(file.getCanonicalPath());
+		if (fh != null)
+			return fh.getHashFile();
+		else
+			return null;
 	}
 	
 	

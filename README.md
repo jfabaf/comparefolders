@@ -31,6 +31,8 @@ File '1/may/image3.jpg' not found in folder2
 
 And it says nothing about fffg.jpg and image2.jpg because these files are in folder 2 (same MD5)
 
+You can use -htX and -fX together if you don't want to calculate same md5 files again.
+
 Usage
 -----
 

@@ -49,7 +49,7 @@ public class Main {
 					System.out.println("File '" + file.getPath() + "' not found in folder1");
 				}
 			}
-			saveHashFolders(hashFolder1, hashFolder1);
+			saveHashFolders(hashFolder1, hashFolder2);
 		} catch (Exception e) {
 			System.out.println("An error is ocurred: " + e.toString());
 		}
@@ -81,36 +81,14 @@ public class Main {
 	private static boolean checkArgs() {
 		boolean dev = true;
 		
-		//folder1
-		if (cml.hasOption("f1") && cml.hasOption("ht1")) {
-			dev = false;
-			System.err.println("Options f1 and ht1 couldn't be together");
-		}
-		
-		if (cml.hasOption("ht1") && cml.hasOption("hs1")) {
-			dev = false;
-			System.err.println("Options ht1 and hs1 couldn't be together");
-		}
-		
 		if (!cml.hasOption("f1") && !cml.hasOption("ht1")) {
 			dev = false;
-			System.err.println("You need f1 or ht1 option (one of them)");
-		}
-				
-		//folder2
-		if (cml.hasOption("f2") && cml.hasOption("ht2")) {
-			dev = false;
-			System.err.println("Options f2 and ht2 couldn't be together");
-		}
-		
-		if (cml.hasOption("ht2") && cml.hasOption("hs2")) {
-			dev = false;
-			System.err.println("Options ht2 and hs2 couldn't be together");
+			System.err.println("You need f1 or ht1 option (one of them or both)");
 		}
 		
 		if (!cml.hasOption("f2") && !cml.hasOption("ht2")) {
 			dev = false;
-			System.err.println("You need f2 or ht2 option (one of them)");
+			System.err.println("You need f2 or ht2 option (one of them or both)");
 		}
 
 		return dev;
@@ -186,19 +164,17 @@ public class Main {
 		HashFolder hf = null;
 		String htPath = null;
 		try {
-			if (cml.hasOption("f" + Integer.toString(nfolder))) {
-				if (!cml.hasOption("sp"))
-					hf = new HashFolder(cml.getOptionValue("f" + Integer.toString(nfolder)));
-				else
-					hf = new HashFolder(cml.getOptionValue("f" + Integer.toString(nfolder)),true);
-			}
-
 			if (cml.hasOption("ht" + Integer.toString(nfolder))) {
 				htPath = cml.getOptionValue("ht" + Integer.toString(nfolder));
 				hf = readHashFolderFromFile(htPath);
 			}
 			
-			
+			if (cml.hasOption("f" + Integer.toString(nfolder))) {
+				if (!cml.hasOption("sp"))
+					hf = new HashFolder(cml.getOptionValue("f" + Integer.toString(nfolder)),hf);
+				else
+					hf = new HashFolder(cml.getOptionValue("f" + Integer.toString(nfolder)),hf,true);
+			}
 		} catch (Exception e) {
 			System.err.println("An error is ocurred: " + e.toString());
 			System.exit(-1);
