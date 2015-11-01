@@ -39,6 +39,7 @@ Usage
 ```
 usage: comparefolders  [-f1 <folder1>] [-f2 <folder2>] [-hs1 <file>] [-hs2
        <file>] [-ht1 <file>] [-ht2 <file>] [-sp]
+ -d,--debug                     Show debug info       
  -f1,--folder1 <folder1>        Path to folder 1
  -f2,--folder2 <folder2>        Path to folder 2
  -hs1,--hashtablesave1 <file>   save hashtable of folder1 to file
