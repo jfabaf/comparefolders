@@ -51,7 +51,7 @@ public class Main {
 			}
 			saveHashFolders(hashFolder1, hashFolder2);
 		} catch (Exception e) {
-			System.out.println("An error is ocurred: " + e.toString());
+			System.out.println("[ERROR] An error is ocurred: " + e.toString());
 		}
 	}
 	
@@ -74,7 +74,7 @@ public class Main {
 	      output.writeObject(ht);
 	    }  
 	    catch(IOException e){
-	    	System.out.println("An error is ocurred while writing Hashfolder (" + pathToFile + ") : " + e.toString());
+	    	System.out.println("[ERROR] An error is ocurred while writing Hashfolder (" + pathToFile + ") : " + e.toString());
 	    }
 	}
 	
@@ -137,6 +137,11 @@ public class Main {
 		Option progress = new Option("sp","showprogress", false,
 			      "Show percentaje of progress");
 		options.addOption(progress);		
+		
+		//debug
+		Option debug = new Option("d","debug", false,
+			      "Show debug info");
+		options.addOption(debug);
 
 		// create the parser
 	    CommandLineParser parser = new PosixParser();
@@ -147,7 +152,7 @@ public class Main {
 	    }
 	    catch( ParseException exp ) {
 	        // oops, something went wrong
-	        System.err.println( "Parsing failed.  Reason: " + exp.getMessage() );
+	        System.err.println( "[ERROR] Parsing failed.  Reason: " + exp.getMessage() );
 	        
 	        System.exit(-1);
 	    }
@@ -170,13 +175,10 @@ public class Main {
 			}
 			
 			if (cml.hasOption("f" + Integer.toString(nfolder))) {
-				if (!cml.hasOption("sp"))
-					hf = new HashFolder(cml.getOptionValue("f" + Integer.toString(nfolder)),hf);
-				else
-					hf = new HashFolder(cml.getOptionValue("f" + Integer.toString(nfolder)),hf,true);
+				hf = new HashFolder(cml.getOptionValue("f" + Integer.toString(nfolder)),hf,cml.hasOption("sp"),cml.hasOption("d"));
 			}
 		} catch (Exception e) {
-			System.err.println("An error is ocurred: " + e.toString());
+			System.err.println("[ERROR] An error is ocurred: " + e.toString());
 			System.exit(-1);
 		}
 		 
@@ -196,11 +198,11 @@ public class Main {
 	      hf = (HashFolder)input.readObject();
 	    }
 	    catch(ClassNotFoundException e){
-	    	System.err.println("An error is ocurred: " + e.toString());
+	    	System.err.println("[ERROR] An error is ocurred: " + e.toString());
 			System.exit(-1);
 	    }
 	    catch(IOException e){
-	    	System.err.println("An error is ocurred: " + e.toString());
+	    	System.err.println("[ERROR] An error is ocurred: " + e.toString());
 			System.exit(-1);
 	    }		
 		return hf;
