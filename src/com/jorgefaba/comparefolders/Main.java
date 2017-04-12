@@ -34,19 +34,21 @@ public class Main {
 		try {
 			hashFolder1 = getHashFolder(1);
 			hashFolder2 = getHashFolder(2);
-			System.out.println("folder1: " + hashFolder1.getFolderPath());
-			System.out.println("folder2: " + hashFolder2.getFolderPath());
-			System.out.println("folder1:processedpaths " + hashFolder1.getProcessedPaths());
-			System.out.println("folder2:processedpaths " + hashFolder2.getProcessedPaths());
+			if (cml.hasOption("d")) {
+				System.out.println("folder1: " + hashFolder1.getFolderPath());
+				System.out.println("folder2: " + hashFolder2.getFolderPath());
+				System.out.println("folder1:processedpaths " + hashFolder1.getProcessedPaths());
+				System.out.println("folder2:processedpaths " + hashFolder2.getProcessedPaths());
+			}
 			for (FileHash file: hashFolder1.getFiles()) {
 				if (!hashFolder2.contains(file)) {
-					System.out.println("File '" + file.getPath() + "' not found in folder2");
+					System.out.println("+'" + file.getPath() + "'");
 				}
 			}
 			
 			for (FileHash file: hashFolder2.getFiles()) {
 				if (!hashFolder1.contains(file)) {
-					System.out.println("File '" + file.getPath() + "' not found in folder1");
+					System.out.println("-'" + file.getPath() + "'");
 				}
 			}
 			saveHashFolders(hashFolder1, hashFolder2);
