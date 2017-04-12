@@ -39,10 +39,12 @@ Usage
 -----
 
 ```
-usage: comparefolders  [-f1 <folder1>] [-f2 <folder2>] [-hs1 <file>] [-hs2
-       <file>] [-ht1 <file>] [-ht2 <file>] [-sp]
- -d,--debug                     Show debug info       
+usage: comparefolders  [-d] [-f1 <folder1>] [-f1only] [-f2 <folder2>]
+       [-hs1 <file>] [-hs2 <file>] [-ht1 <file>] [-ht2 <file>] [-sp]
+ -d,--debug                     Show debug info
  -f1,--folder1 <folder1>        Path to folder 1
+ -f1only,--f1only               Only process files in f1 not found in f2
+                                but not viceversa
  -f2,--folder2 <folder2>        Path to folder 2
  -hs1,--hashtablesave1 <file>   save hashtable of folder1 to file
  -hs2,--hashtablesave2 <file>   save hashtable of folder2 to file

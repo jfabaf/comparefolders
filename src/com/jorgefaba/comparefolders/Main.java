@@ -46,9 +46,11 @@ public class Main {
 				}
 			}
 			
-			for (FileHash file: hashFolder2.getFiles()) {
-				if (!hashFolder1.contains(file)) {
-					System.out.println("-'" + file.getPath() + "'");
+			if (!cml.hasOption("f1only")) {
+				for (FileHash file: hashFolder2.getFiles()) {
+					if (!hashFolder1.contains(file)) {
+						System.out.println("-'" + file.getPath() + "'");
+					}
 				}
 			}
 			saveHashFolders(hashFolder1, hashFolder2);
@@ -144,6 +146,12 @@ public class Main {
 		Option debug = new Option("d","debug", false,
 			      "Show debug info");
 		options.addOption(debug);
+		
+		//Only process files in f1 not found in f2 but not viceversa
+		Option f1only = new Option("f1only","f1only", false,
+			      "Only process files in f1 not found in f2 but not viceversa");
+		options.addOption(f1only);
+		
 
 		// create the parser
 	    CommandLineParser parser = new PosixParser();
